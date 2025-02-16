@@ -35,3 +35,13 @@ async def test_rate_limiter(guard: RedGuard):
     assert await limiter.acquire() is False
 
     await limiter.release()
+
+
+async def test_object_pool(guard: RedGuard):
+    def dict_factory() -> dict[str, str]:
+        return {}
+
+    pool = guard.pool(Lock, "text-pool", factory=dict_factory, ttl=1)
+
+    async with pool as resource:
+        assert isinstance(resource, dict)

@@ -3,10 +3,13 @@ from __future__ import annotations
 import asyncio
 from abc import ABC, abstractmethod
 from contextlib import AbstractAsyncContextManager
+from logging import getLogger
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from redis.asyncio import Redis
+
+logger = getLogger(__name__)
 
 
 class SynchronizationPrimitive(AbstractAsyncContextManager, ABC):
@@ -45,7 +48,9 @@ class SynchronizationPrimitive(AbstractAsyncContextManager, ABC):
         raise NotImplementedError
 
     async def __aenter__(self) -> bool:
+        logger.debug("Acquiring %s", self)
         return await self.acquire(blocking=True)
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        logger.debug("Releasing %s", self)
         await self.release()

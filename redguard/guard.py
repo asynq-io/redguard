@@ -59,5 +59,5 @@ class RedGuard:
         **kwargs: Any,
     ) -> SharedResourcePool[T]:
         return SharedResourcePool(
-            self.new(cls, name, **kwargs), factory, timeout=timeout
+            self.new(cls, name, **kwargs), factory=factory, timeout=timeout
         )
